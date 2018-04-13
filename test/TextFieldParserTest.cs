@@ -31,6 +31,7 @@ using NUnit.Framework;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.VisualBasic;
 using System.IO;
+using BasicTextFieldParser;
 
 namespace MonoTests.Microsoft_VisualBasic.FileIO
 {

@@ -24,7 +24,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Microsoft.VisualBasic.FileIO
+namespace BasicTextFieldParser
 {
     using System;
     using System.Collections.Generic;
@@ -386,8 +386,8 @@ namespace Microsoft.VisualBasic.FileIO
 
         public override string ToString()
         {
-            var msg = "Microsoft.VisualBasic.FileIO.MalformedLineException: ";
-            msg += !_anyMessage ? "Exception of type 'Microsoft.VisualBasic.FileIO.MalformedLineException' was thrown." : Message;
+            var msg = "BasicTextFieldParser.MalformedLineException: ";
+            msg += !_anyMessage ? "Exception of type 'BasicTextFieldParser.MalformedLineException' was thrown." : Message;
             if (InnerException != null)
             {
                 msg += " ---> " + InnerException + Environment.NewLine;
