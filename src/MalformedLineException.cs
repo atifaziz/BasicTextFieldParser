@@ -32,7 +32,6 @@ namespace Microsoft.VisualBasic.FileIO
     [Serializable]
     public class MalformedLineException : Exception
     {
-        long m_LineNumber;
         readonly bool m_AnyMessage;
 
         public MalformedLineException()
@@ -50,7 +49,7 @@ namespace Microsoft.VisualBasic.FileIO
         {
             if (info == null)
                 return;
-            m_LineNumber = info.GetInt64(nameof(LineNumber));
+            LineNumber = info.GetInt64(nameof(LineNumber));
         }
 
         public MalformedLineException(string message, Exception innerException) :
@@ -62,14 +61,14 @@ namespace Microsoft.VisualBasic.FileIO
         public MalformedLineException(string message, long lineNumber) :
             base(message)
         {
-            m_LineNumber = lineNumber;
+            LineNumber = lineNumber;
             m_AnyMessage = !string.IsNullOrEmpty(message);
         }
 
         public MalformedLineException(string message, long lineNumber, Exception innerException) :
             base(message, innerException)
         {
-            m_LineNumber = lineNumber;
+            LineNumber = lineNumber;
             m_AnyMessage = !string.IsNullOrEmpty(message);
         }
 
@@ -78,7 +77,7 @@ namespace Microsoft.VisualBasic.FileIO
             base.GetObjectData(info, context);
             if (info == null)
                 return;
-            info.AddValue("LineNumber", m_LineNumber);
+            info.AddValue("LineNumber", LineNumber);
         }
 
         public override string ToString()
@@ -90,13 +89,9 @@ namespace Microsoft.VisualBasic.FileIO
                 msg += " ---> " + InnerException + Environment.NewLine;
                 msg += InnerException.StackTrace + "   --- End of inner exception stack trace ---";
             }
-            return msg + " Line Number:" + m_LineNumber;
+            return msg + " Line Number:" + LineNumber;
         }
 
-        public long LineNumber
-        {
-            get => m_LineNumber;
-            set => m_LineNumber = value;
-        }
+        public long LineNumber { get; set; }
     }
 }
