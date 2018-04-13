@@ -24,13 +24,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-
 namespace Microsoft.VisualBasic.FileIO
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Runtime.Serialization;
+    using System.Text;
+
+    public enum FieldType
+    {
+        Delimited,
+        FixedWidth,
+    }
+
     public class TextFieldParser : IDisposable
     {
         TextReader _reader;
@@ -324,5 +331,71 @@ namespace Microsoft.VisualBasic.FileIO
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+    }
+
+    [Serializable]
+    public class MalformedLineException : Exception
+    {
+        readonly bool _anyMessage;
+
+        public MalformedLineException()
+        {
+        }
+
+        public MalformedLineException(string message) :
+            base(message)
+        {
+            _anyMessage = !string.IsNullOrEmpty(message);
+        }
+
+        protected MalformedLineException(SerializationInfo info, StreamingContext context) :
+            base(info, context)
+        {
+            if (info == null)
+                return;
+            LineNumber = info.GetInt64(nameof(LineNumber));
+        }
+
+        public MalformedLineException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+            _anyMessage = !string.IsNullOrEmpty(message);
+        }
+
+        public MalformedLineException(string message, long lineNumber) :
+            base(message)
+        {
+            LineNumber = lineNumber;
+            _anyMessage = !string.IsNullOrEmpty(message);
+        }
+
+        public MalformedLineException(string message, long lineNumber, Exception innerException) :
+            base(message, innerException)
+        {
+            LineNumber = lineNumber;
+            _anyMessage = !string.IsNullOrEmpty(message);
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            if (info == null)
+                return;
+            info.AddValue("LineNumber", LineNumber);
+        }
+
+        public override string ToString()
+        {
+            var msg = "Microsoft.VisualBasic.FileIO.MalformedLineException: ";
+            msg += !_anyMessage ? "Exception of type 'Microsoft.VisualBasic.FileIO.MalformedLineException' was thrown." : Message;
+            if (InnerException != null)
+            {
+                msg += " ---> " + InnerException + Environment.NewLine;
+                msg += InnerException.StackTrace + "   --- End of inner exception stack trace ---";
+            }
+            return msg + " Line Number:" + LineNumber;
+        }
+
+        public long LineNumber { get; set; }
     }
 }
