@@ -33,12 +33,12 @@ namespace Microsoft.VisualBasic.FileIO
 {
     public class TextFieldParser : IDisposable
     {
-        TextReader m_Reader;
-        readonly bool m_LeaveOpen;
-        int[] m_FieldWidths;
-        readonly Queue<string> m_PeekedLine = new Queue<string>();
-        int m_MinFieldLength;
-        bool disposedValue;
+        TextReader _reader;
+        readonly bool _leaveOpen;
+        int[] _fieldWidths;
+        readonly Queue<string> _peekedLine = new Queue<string>();
+        int _minFieldLength;
+        bool _disposedValue;
 
         public TextFieldParser(Stream stream) :
             this(new StreamReader(stream)) {}
@@ -66,8 +66,8 @@ namespace Microsoft.VisualBasic.FileIO
 
         TextFieldParser(TextReader reader, bool leaveOpen)
         {
-            m_Reader = reader;
-            m_LeaveOpen = leaveOpen;
+            _reader = reader;
+            _leaveOpen = leaveOpen;
         }
 
         string[] GetDelimitedFields()
@@ -164,14 +164,14 @@ namespace Microsoft.VisualBasic.FileIO
 
         string[] GetWidthFields()
         {
-            if (m_FieldWidths == null || m_FieldWidths.Length == 0)
+            if (_fieldWidths == null || _fieldWidths.Length == 0)
                 throw new InvalidOperationException("Unable to read fixed width fields because FieldWidths is Nothing or empty.");
 
-            var result = new string[m_FieldWidths.Length - 1 + 1];
+            var result = new string[_fieldWidths.Length - 1 + 1];
 
             var line = GetNextLine();
 
-            if (line.Length < m_MinFieldLength)
+            if (line.Length < _minFieldLength)
                 RaiseFieldWidthEx(line);
 
             var startIndex = 0;
@@ -179,9 +179,9 @@ namespace Microsoft.VisualBasic.FileIO
             for (var i = 0; i <= result.Length - 1; i++)
             {
                 result[i] = !trimWhiteSpace
-                          ? line.Substring(startIndex, m_FieldWidths[i])
-                          : line.Substring(startIndex, m_FieldWidths[i]).Trim();
-                startIndex += m_FieldWidths[i];
+                          ? line.Substring(startIndex, _fieldWidths[i])
+                          : line.Substring(startIndex, _fieldWidths[i]).Trim();
+                startIndex += _fieldWidths[i];
             }
 
             return result;
@@ -209,15 +209,15 @@ namespace Microsoft.VisualBasic.FileIO
         }
 
         string GetNextLine() =>
-            m_PeekedLine.Count > 0
-            ? m_PeekedLine.Dequeue()
+            _peekedLine.Count > 0
+            ? _peekedLine.Dequeue()
             : GetNextRealLine();
 
         public void Close()
         {
-            if (m_Reader != null && !m_LeaveOpen)
-                m_Reader.Close();
-            m_Reader = null;
+            if (_reader != null && !_leaveOpen)
+                _reader.Close();
+            _reader = null;
         }
 
         ~TextFieldParser() => Dispose(false);
@@ -228,10 +228,10 @@ namespace Microsoft.VisualBasic.FileIO
                 throw new ArgumentException("numberOfChars has to be a positive, non-zero number", nameof(numberOfChars));
 
             string theLine = null;
-            if (m_PeekedLine.Count > 0)
+            if (_peekedLine.Count > 0)
             {
-                var peekedLines = m_PeekedLine.ToArray();
-                for (var i = 0; i <= m_PeekedLine.Count - 1; i++)
+                var peekedLines = _peekedLine.ToArray();
+                for (var i = 0; i <= _peekedLine.Count - 1; i++)
                 {
                     if (!IsCommentLine(peekedLines[i]))
                     {
@@ -245,8 +245,8 @@ namespace Microsoft.VisualBasic.FileIO
             {
                 do
                 {
-                    theLine = m_Reader.ReadLine();
-                    m_PeekedLine.Enqueue(theLine);
+                    theLine = _reader.ReadLine();
+                    _peekedLine.Enqueue(theLine);
                 }
                 while (theLine != null && IsCommentLine(theLine));
             }
@@ -271,14 +271,14 @@ namespace Microsoft.VisualBasic.FileIO
 
         public string ReadLine()
         {
-            if (m_PeekedLine.Count > 0)
-                return m_PeekedLine.Dequeue();
+            if (_peekedLine.Count > 0)
+                return _peekedLine.Dequeue();
             LineNumber = LineNumber == -1 ? 1 : LineNumber + 1;
-            return m_Reader.ReadLine();
+            return _reader.ReadLine();
         }
 
         public string ReadToEnd() =>
-            m_Reader.ReadToEnd();
+            _reader.ReadToEnd();
 
         public bool EndOfData => PeekChars(1) == null;
 
@@ -299,24 +299,24 @@ namespace Microsoft.VisualBasic.FileIO
 
         public int[] FieldWidths
         {
-            get => m_FieldWidths;
+            get => _fieldWidths;
             set
             {
-                m_FieldWidths = value;
-                if (m_FieldWidths != null)
+                _fieldWidths = value;
+                if (_fieldWidths != null)
                 {
-                    m_MinFieldLength = 0;
-                    for (var i = 0; i <= m_FieldWidths.Length - 1; i++)
-                        m_MinFieldLength += value[i];
+                    _minFieldLength = 0;
+                    for (var i = 0; i <= _fieldWidths.Length - 1; i++)
+                        _minFieldLength += value[i];
                 }
             }
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
                 Close();
-            disposedValue = true;
+            _disposedValue = true;
         }
 
         public void Dispose()

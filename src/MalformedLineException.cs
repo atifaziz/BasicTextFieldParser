@@ -32,7 +32,7 @@ namespace Microsoft.VisualBasic.FileIO
     [Serializable]
     public class MalformedLineException : Exception
     {
-        readonly bool m_AnyMessage;
+        readonly bool _anyMessage;
 
         public MalformedLineException()
         {
@@ -41,7 +41,7 @@ namespace Microsoft.VisualBasic.FileIO
         public MalformedLineException(string message) :
             base(message)
         {
-            m_AnyMessage = !string.IsNullOrEmpty(message);
+            _anyMessage = !string.IsNullOrEmpty(message);
         }
 
         protected MalformedLineException(SerializationInfo info, StreamingContext context) :
@@ -55,21 +55,21 @@ namespace Microsoft.VisualBasic.FileIO
         public MalformedLineException(string message, Exception innerException) :
             base(message, innerException)
         {
-            m_AnyMessage = !string.IsNullOrEmpty(message);
+            _anyMessage = !string.IsNullOrEmpty(message);
         }
 
         public MalformedLineException(string message, long lineNumber) :
             base(message)
         {
             LineNumber = lineNumber;
-            m_AnyMessage = !string.IsNullOrEmpty(message);
+            _anyMessage = !string.IsNullOrEmpty(message);
         }
 
         public MalformedLineException(string message, long lineNumber, Exception innerException) :
             base(message, innerException)
         {
             LineNumber = lineNumber;
-            m_AnyMessage = !string.IsNullOrEmpty(message);
+            _anyMessage = !string.IsNullOrEmpty(message);
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -83,7 +83,7 @@ namespace Microsoft.VisualBasic.FileIO
         public override string ToString()
         {
             var msg = "Microsoft.VisualBasic.FileIO.MalformedLineException: ";
-            msg += !m_AnyMessage ? "Exception of type 'Microsoft.VisualBasic.FileIO.MalformedLineException' was thrown." : Message;
+            msg += !_anyMessage ? "Exception of type 'Microsoft.VisualBasic.FileIO.MalformedLineException' was thrown." : Message;
             if (InnerException != null)
             {
                 msg += " ---> " + InnerException + Environment.NewLine;
