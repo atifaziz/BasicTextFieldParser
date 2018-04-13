@@ -80,7 +80,7 @@ namespace BasicTextFieldParser
         string[] GetDelimitedFields()
         {
             if (Delimiters == null || Delimiters.Length == 0)
-                throw new InvalidOperationException("Unable to read delimited fields because Delimiters is Nothing or empty.");
+                throw new InvalidOperationException("Unable to read delimited fields because " + nameof(Delimiters) + " is Nothing or empty.");
             var result = new List<string>();
 
             var line = GetNextLine();
@@ -159,20 +159,20 @@ namespace BasicTextFieldParser
         {
             ErrorLineNumber = LineNumber;
             ErrorLine = line;
-            throw new MalformedLineException("Line " + ErrorLineNumber + " cannot be parsed using the current Delimiters.", ErrorLineNumber);
+            throw new MalformedLineException($"Line {ErrorLineNumber} cannot be parsed using the current {nameof(Delimiters)}.", ErrorLineNumber);
         }
 
         void RaiseFieldWidthEx(string line)
         {
             ErrorLineNumber = LineNumber;
             ErrorLine = line;
-            throw new MalformedLineException("Line " + ErrorLineNumber + " cannot be parsed using the current FieldWidths.", ErrorLineNumber);
+            throw new MalformedLineException($"Line {ErrorLineNumber} cannot be parsed using the current {nameof(FieldWidths)}.", ErrorLineNumber);
         }
 
         string[] GetWidthFields()
         {
             if (_fieldWidths == null || _fieldWidths.Length == 0)
-                throw new InvalidOperationException("Unable to read fixed width fields because FieldWidths is Nothing or empty.");
+                throw new InvalidOperationException("Unable to read fixed width fields because " + nameof(FieldWidths) + " is Nothing or empty.");
 
             var result = new string[_fieldWidths.Length - 1 + 1];
 
@@ -232,7 +232,7 @@ namespace BasicTextFieldParser
         public string PeekChars(int numberOfChars)
         {
             if (numberOfChars < 1)
-                throw new ArgumentException("numberOfChars has to be a positive, non-zero number", nameof(numberOfChars));
+                throw new ArgumentException(nameof(numberOfChars) + " has to be a positive, non-zero number", nameof(numberOfChars));
 
             string theLine = null;
             if (_peekedLine.Count > 0)
@@ -386,8 +386,9 @@ namespace BasicTextFieldParser
 
         public override string ToString()
         {
-            var msg = "BasicTextFieldParser.MalformedLineException: ";
-            msg += !_anyMessage ? "Exception of type 'BasicTextFieldParser.MalformedLineException' was thrown." : Message;
+            const string typeName = nameof(BasicTextFieldParser) + "." + nameof(MalformedLineException);
+            var msg = typeName + ": ";
+            msg += !_anyMessage ? "Exception of type '" + typeName + "' was thrown." : Message;
             if (InnerException != null)
             {
                 msg += " ---> " + InnerException + Environment.NewLine;
