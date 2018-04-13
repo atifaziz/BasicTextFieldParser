@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\BasicTextFieldParser.vbproj" />
+    <ProjectReference Include="..\src\BasicTextFieldParser.csproj" />
   </ItemGroup>
 
 </Project>
