@@ -34,9 +34,9 @@ namespace Microsoft.VisualBasic.FileIO
     public class TextFieldParser : IDisposable
     {
         TextReader m_Reader;
-        bool m_LeaveOpen;
+        readonly bool m_LeaveOpen;
         int[] m_FieldWidths;
-        Queue<string> m_PeekedLine = new Queue<string>();
+        readonly Queue<string> m_PeekedLine = new Queue<string>();
         int m_MinFieldLength;
         bool disposedValue;
 
