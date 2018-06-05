@@ -33,13 +33,18 @@ namespace BasicTextFieldParser
     using System.Runtime.Serialization;
     using System.Text;
 
-    public enum FieldType
+    #if BASIC_TEXT_FILE_PARSER_LIB
+    public partial class TextFieldParser {}
+    public partial class MalformedLineException {}
+    public // ...
+    #endif
+    enum FieldType
     {
         Delimited,
         FixedWidth,
     }
 
-    public class TextFieldParser : IDisposable
+    partial class TextFieldParser : IDisposable
     {
         TextReader _reader;
         readonly bool _leaveOpen;
@@ -335,7 +340,7 @@ namespace BasicTextFieldParser
     }
 
     [Serializable]
-    public class MalformedLineException : Exception
+    partial class MalformedLineException : Exception
     {
         readonly bool _anyMessage;
 
