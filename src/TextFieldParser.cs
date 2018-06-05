@@ -1,6 +1,6 @@
 //
-// Authors:
-//   Rolf Bjarne Kvinge (RKvinge@novell.com>
+// Authors (of original Visual Basic version):
+//   Rolf Bjarne Kvinge <RKvinge@novell.com>
 //
 // Copyright (C) 2007 Novell (http://www.novell.com)
 //
