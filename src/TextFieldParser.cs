@@ -2,6 +2,7 @@
 // Authors (of original Visual Basic version):
 //   Rolf Bjarne Kvinge <RKvinge@novell.com>
 //
+// Copyright (C) 2018 Atif Aziz
 // Copyright (C) 2007 Novell (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
