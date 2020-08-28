@@ -109,15 +109,13 @@ namespace BasicTextFieldParser
                 return string.Empty;
             }
 
-            var currentIndex = 0;
+            var currentIndex = startIndex;
             var inQuote = false;
             if (HasFieldsEnclosedInQuotes && line[currentIndex] == '"')
             {
                 inQuote = true;
                 ++startIndex;
             }
-
-            currentIndex = startIndex;
 
             var mustMatch = false;
             for (var j = startIndex; j <= line.Length - 1; j++)
